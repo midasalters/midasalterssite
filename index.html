@@ -524,32 +524,38 @@
     </section>
 
     <section id="gallery" aria-labelledby="gallery-title">
+      <style>
+      /* Keep the header above videos */
+      header { z-index: 6; }
+      /* Make sure videos don't introduce a tint or unexpected stacking */
+      .art-card video { position: relative; z-index: 0; background: transparent; }
+      </style>
       <h2 id="gallery-title">Alter Gallery</h2>
       <p class="note" style="color:#ffffff"><a href="https://drive.google.com/drive/u/1/folders/1iBj5DzNmjvZtSgd_dQyVBCw52jv_QvxB" style="color:inherit">View the entire portfolio</a></p>
       <div class="gallery">
-        <article class="art-card">
-          <div>
-            <video width="640" autoplay loop muted playsinline>
-              <source src="lonis.mp4" type="video/mp4">
-            </video>
-          </div>
-        </article>
-        <article class="art-card">
-          <div>
-            <video width="640" autoplay loop muted playsinline>
-              <source src="Teysa.mp4" type="video/mp4">
-            </video>
-          </div>
-        </article>
-        </article>
-        <article class="art-card">
-            <div>
-            <video width="640" autoplay loop muted playsinline>
-              <source src="kinnan.mp4" type="video/mp4">
-            </video>
-            </div>
-          </div>
-        </article>
+      <article class="art-card">
+        <div>
+        <video width="640" autoplay loop muted playsinline>
+          <source src="lonis.mp4" type="video/mp4">
+        </video>
+        </div>
+      </article>
+
+      <article class="art-card">
+        <div>
+        <video width="640" autoplay loop muted playsinline>
+          <source src="Teysa.mp4" type="video/mp4">
+        </video>
+        </div>
+      </article>
+
+      <article class="art-card">
+        <div>
+        <video width="640" autoplay loop muted playsinline>
+          <source src="kinnan.mp4" type="video/mp4">
+        </video>
+        </div>
+      </article>
       </div>
     </section>
 
