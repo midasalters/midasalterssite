@@ -304,5 +304,56 @@
       });
     });
   </script>
+  <script>
+    // Smooth-scroll fallback that accounts for the sticky header.
+    (function () {
+      function getHeaderOffset() {
+        const header = document.querySelector('header');
+        if (!header) return 0;
+        // Use bounding rect height (works with sticky and responsive layouts)
+        return Math.ceil(header.getBoundingClientRect().height) + 8;
+      }
+
+      function smoothScrollToElement(el) {
+        if (!el) return;
+        const offset = getHeaderOffset();
+        const top = el.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+
+      // Intercept all same-page anchor links and perform a smooth scroll
+      document.addEventListener('click', function (e) {
+        const a = e.target.closest && e.target.closest('a[href^="#"]');
+        if (!a) return;
+        const href = a.getAttribute('href');
+        if (!href || href === '#') return;
+        // only handle same-document anchors
+        if (href.indexOf('#') === 0) {
+          const target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            // update URL without jumping
+            if (history.pushState) {
+              history.pushState(null, '', href);
+            } else {
+              location.hash = href;
+            }
+            smoothScrollToElement(target);
+          }
+        }
+      }, { passive: true });
+
+      // If page loaded with a hash, ensure we scroll to it below the header
+      window.addEventListener('load', function () {
+        if (location.hash) {
+          const target = document.querySelector(location.hash);
+          if (target) {
+            // delay slightly to let layout and sticky header settle
+            setTimeout(function () { smoothScrollToElement(target); }, 50);
+          }
+        }
+      });
+    }());
+  </script>
 </body>
 </html>

@@ -283,6 +283,16 @@ section {
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
 }
 
+/* Make anchor targets sit below the sticky header */
+section {
+  scroll-margin-top: 96px;
+}
+
+/* Smooth scrolling for anchor navigation */
+html {
+  scroll-behavior: smooth;
+}
+
 section h2 {
   margin-top: 0;
   margin-bottom: 14px;
@@ -461,6 +471,7 @@ footer {
   .hero {
     padding: 26px;
   }
+  section { scroll-margin-top: 72px; }
 }
 
 @media (max-width: 640px) {
@@ -469,6 +480,7 @@ footer {
   }
   section {
     padding: 22px;
+    scroll-margin-top: 64px;
   }
 }
 
