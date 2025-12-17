@@ -1,7 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
   <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-NZJ3B1EWK6"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NZJ3B1EWK6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);} 
+    gtag('js', new Date());
+    gtag('config', 'G-NZJ3B1EWK6');
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MidasAlters</title>
+  <meta name="application-name" content="MidasAlters">
+  <meta name="apple-mobile-web-app-title" content="MidasAlters">
+  <link rel="icon" type="image/png" href="logo (1).png">
+  <link rel="shortcut icon" href="logo (1).png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -182,7 +200,10 @@
       const videos = Array.from(document.querySelectorAll('.lazy-video'));
       if (!videos.length) return;
 
-      // ensure videos are muted and play inline early so browsers allow quick autoplay
+      // detect touch devices / coarse pointers — on those we avoid preloading/autoplay
+      const isTouch = (window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches) || ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+
+      // ensure videos are muted and play inline early; but don't try autoplay on touch devices
       videos.forEach(v => {
         try { v.muted = true; } catch(e) {}
         try { v.playsInline = true; } catch(e) {}
@@ -249,8 +270,9 @@
         entries.forEach(entry => {
           const v = entry.target;
           if (entry.isIntersecting) {
-            // prefetch metadata only; do not autoplay here
-            ensureLoaded(v);
+            // On non-touch devices we prefetch metadata so hover/play is fast.
+            // On touch devices, avoid prefetching to save bandwidth and CPU until the user taps.
+            if (!isTouch) ensureLoaded(v);
           } else {
             try { v.pause(); } catch(e) {}
           }
@@ -275,6 +297,7 @@
         // remove native poster attribute to avoid native overlays
         v.removeAttribute('poster');
 
+
         // attempt to find a real poster image (will update posterImg when found)
         trySetPoster(v);
         observer.observe(v);
@@ -286,9 +309,13 @@
         v.addEventListener('pause', () => { if (v._posterImg) v._posterImg.style.display = ''; });
 
         // click-to-play fallback on wrapper
-        wrapper.addEventListener('click', () => {
+        wrapper.addEventListener('click', (ev) => {
+          // On touch devices we want tap-to-play behavior; on non-touch the click toggles as well.
           if (!v.dataset.loaded) loadAndPlay(v);
+          // If the play call is blocked, let the user know by leaving the poster visible.
           if (v.paused) v.play().catch(()=>{}); else v.pause();
+          // prevent accidental page scroll when tapping the poster
+          ev.preventDefault();
         });
 
         // Make wrapper keyboard-focusable and add hover/focus handlers for play-on-hover

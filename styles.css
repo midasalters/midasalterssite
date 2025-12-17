@@ -484,6 +484,34 @@ footer {
   }
 }
 
+@media (max-width: 640px) {
+  /* Reduce visual effects that are expensive on mobile */
+  .grid-overlay { display: none; }
+  .floating-orb { display: none; }
+  header { backdrop-filter: none; box-shadow: none; }
+  .card-stack .card, .art-card { box-shadow: none; }
+  .art-card .bg { display: none; }
+
+  /* Make nav items more touch-friendly */
+  nav a { padding: 12px 14px; font-size: 1rem; }
+
+  /* Reserve aspect ratio for video posters to avoid layout shift */
+  .video-wrap { aspect-ratio: 16/9; }
+  .video-wrap video, .video-poster { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Slightly reduce hero padding on mobile */
+  .hero { padding: 20px; }
+}
+
+@media (pointer: coarse) {
+  /* On coarse pointers (touch), prefer tap to play — visually emphasize posters */
+  .video-poster { cursor: pointer; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
 /* Gallery-specific overrides previously inline */
 header { z-index: 6; }
 .art-card video { position: relative; z-index: 0; background: transparent; width: 100%; height: auto; display: block; border-radius: 16px; object-fit: cover; }
